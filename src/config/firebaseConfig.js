@@ -7,8 +7,19 @@ import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+console.log('Firebase Config:', {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID
+});
+
+// Debug: Log environment variable access
+console.log('Environment variables:', {
+  NODE_ENV: process.env.NODE_ENV,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  allEnv: process.env
+});
+
+// Temporary direct config for testing
 const firebaseConfig = {
   apiKey: "AIzaSyB9TsRk2wf-rEgAB8TyzqszDjHSUwfPxcc",
   authDomain: "fire-wood-c69f3.firebaseapp.com",
@@ -19,6 +30,11 @@ const firebaseConfig = {
   measurementId: "G-2073LQCJ3Z"
 };
 
+// Add error checking
+if (!firebaseConfig.projectId) {
+  throw new Error('Firebase projectId is missing. Check your environment variables.');
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
@@ -26,4 +42,9 @@ const storage = getStorage(app);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 
-export { storage, auth, firestore };
+// Initialize services
+const db = getFirestore(app);
+
+// Export services
+export { auth, db, storage };
+export default app;
