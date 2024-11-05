@@ -1,0 +1,146 @@
+/* Base nav styles */
+.nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 1rem;
+  z-index: 2;
+  color: white;
+  width: 100%;
+  position: relative;
+  gap: 0.5rem;
+}
+
+.navCont {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.nav-main,
+.nav-auth {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  font-family: "OldLondon", sans-serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  text-align: center;
+  transition: transform 0.2s;
+  background-image: url("../assets/other/Button.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding: 0.5rem 1rem;
+  min-width: 50px;
+  display: inline-block;
+}
+
+.nav-link:hover {
+  transform: scale(1.05);
+  color: #61dafb;
+}
+
+#fhr {
+  overflow-x: hidden;
+  color: white;
+}
+
+/* Media Queries */
+@media (max-width: 1024px) {
+  .nav {
+    padding: 0.5rem;
+  }
+
+  .nav-main,
+  .nav-auth {
+    gap: 0.75rem;
+  }
+
+  .nav-link {
+    padding: 0.4rem 0.8rem;
+    min-width: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .nav-main,
+  .nav-auth {
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    font-size: 1rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .nav-main,
+  .nav-auth {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+
+}
+
+/* Optional: Add a hamburger menu for very small screens */
+@media (max-width: 700px) {
+  .nav {
+    position: relative;
+  }
+
+  .nav-main,
+  .nav-auth {
+    display: none;
+  }
+
+  .nav.mobile-open .nav-main,
+  .nav.mobile-open .nav-auth {
+    display: flex;
+  }
+}
+
+.mobile-menu-button {
+  display: none;
+  padding: 0.5rem;
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .mobile-menu-button {
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}

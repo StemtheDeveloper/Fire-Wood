@@ -1,0 +1,140 @@
+/* Signup.css */
+.signup-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); */
+    padding: 1rem;
+    z-index: 3;
+  }
+  
+  .signup-card {
+    background: rgba(42, 42, 42, 0.95);
+    padding: 2rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .signup-card h1 {
+    font-family: "OldLondon", serif;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+  }
+  
+  .signup-subtitle {
+    color: #cccccc;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+  
+  .google-signup-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  
+  .google-signup-button:hover {
+    background: #f5f5f5;
+    transform: translateY(-1px);
+  }
+  
+  .google-signup-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .google-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cccccc;
+    border-top-color: #333333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .error-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 4px;
+    color: #ff6b6b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .error-icon {
+    font-size: 1.1rem;
+  }
+  
+  .signup-info {
+    margin-top: 2rem;
+    color: #cccccc;
+    font-size: 0.9rem;
+  }
+  
+  .signup-links {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .signup-links a {
+    color: #ffd700;
+    text-decoration: none;
+  }
+  
+  .signup-links a:hover {
+    text-decoration: underline;
+  }
+  
+  .separator {
+    color: #666666;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 480px) {
+    .signup-card {
+      padding: 1.5rem;
+    }
+  
+    .signup-card h1 {
+      font-size: 2rem;
+    }
+  
+    .signup-subtitle {
+      font-size: 1rem;
+    }
+  }
