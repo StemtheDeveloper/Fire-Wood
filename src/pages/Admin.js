@@ -1,149 +1,118 @@
+// src/components/Admin.js
 import React, { useState, useEffect } from 'react';
-import { db } from '../config/firebaseConfig';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useAuth } from '../hooks/useAuth';
+import CardForm from '../components/CardForm';
+import axios from 'axios';
 import '../styles/Admin.css';
 
 const Admin = () => {
+  const { user } = useAuth();
   const [cards, setCards] = useState([]);
-  const [newCard, setNewCard] = useState({
-    name: '',
-    type: '',
-    cost: '',
-    power: '',
-    effect: '',
-    imageUrl: ''
-  });
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [editing, setEditing] = useState(null);
-  const storage = getStorage();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [activeView, setActiveView] = useState('create'); // 'create' or 'manage'
 
   useEffect(() => {
-    fetchCards();
-  }, []);
+    if (user?.email === 'stiaan44@gmail.com') {
+      fetchCards();
+    }
+  }, [user]);
 
   const fetchCards = async () => {
     try {
-      const cardsCollection = collection(db, 'cards');
-      const cardsSnapshot = await getDocs(cardsCollection);
-      const cardsList = cardsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setCards(cardsList);
-    } catch (error) {
-      console.error("Error fetching cards:", error);
+      const response = await axios.get('http://localhost:5000/api/cards');
+      setCards(response.data);
+    } catch (err) {
+      console.error('Error fetching cards:', err);
+      setError('Failed to load cards');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleFileChange = (e) => {
-    if (e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      let imageUrl = newCard.imageUrl;
-
-      if (selectedFile) {
-        const storageRef = ref(storage, `cards/${selectedFile.name}-${Date.now()}`);
-        const uploadResult = await uploadBytes(storageRef, selectedFile);
-        imageUrl = await getDownloadURL(uploadResult.ref);
+  const handleDeleteCard = async (cardId) => {
+    if (window.confirm('Are you sure you want to delete this card?')) {
+      try {
+        await axios.delete(`http://localhost:5000/api/cards/${cardId}`);
+        setCards(cards.filter(card => card._id !== cardId));
+      } catch (err) {
+        console.error('Error deleting card:', err);
+        setError('Failed to delete card');
       }
-
-      const cardData = {
-        ...newCard,
-        imageUrl: imageUrl
-      };
-
-      if (editing) {
-        await updateDoc(doc(db, 'cards', editing), cardData);
-        setEditing(null);
-      } else {
-        await addDoc(collection(db, 'cards'), cardData);
-      }
-
-      setNewCard({ name: '', type: '', cost: '', power: '', effect: '', imageUrl: '' });
-      setSelectedFile(null);
-      fetchCards();
-    } catch (error) {
-      console.error("Error saving card:", error);
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await deleteDoc(doc(db, 'cards', id));
-      fetchCards();
-    } catch (error) {
-      console.error("Error deleting card:", error);
-    }
-  };
+  // Only render if user is admin
+  if (user?.email !== 'stiaan44@gmail.com') {
+    return (
+      <div className="admin-denied">
+        <h1>Access Denied</h1>
+        <p>You do not have permission to view this page.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-container">
-      <h1>Card Management</h1>
-      
-      <form onSubmit={handleSubmit} className="card-form">
-        <input
-          type="text"
-          placeholder="Card Name"
-          value={newCard.name}
-          onChange={(e) => setNewCard({...newCard, name: e.target.value})}
-        />
-        <input
-          type="text"
-          placeholder="Card Type"
-          value={newCard.type}
-          onChange={(e) => setNewCard({...newCard, type: e.target.value})}
-        />
-        <input
-          type="number"
-          placeholder="Cost"
-          value={newCard.cost}
-          onChange={(e) => setNewCard({...newCard, cost: e.target.value})}
-        />
-        <input
-          type="number"
-          placeholder="Power"
-          value={newCard.power}
-          onChange={(e) => setNewCard({...newCard, power: e.target.value})}
-        />
-        <textarea
-          placeholder="Card Effect"
-          value={newCard.effect}
-          onChange={(e) => setNewCard({...newCard, effect: e.target.value})}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-        <button type="submit">{editing ? 'Update Card' : 'Add Card'}</button>
-      </form>
-
-      <div className="cards-list">
-        <h2>Existing Cards</h2>
-        {cards.map(card => (
-          <div key={card.id} className="card-item">
-            <h3>{card.name}</h3>
-            <p>Type: {card.type}</p>
-            <p>Cost: {card.cost}</p>
-            <p>Power: {card.power}</p>
-            <p>Effect: {card.effect}</p>
-            {card.imageUrl && <img src={card.imageUrl} alt={card.name} />}
-            <div className="card-actions">
-              <button onClick={() => {
-                setEditing(card.id);
-                setNewCard(card);
-              }}>Edit</button>
-              <button onClick={() => handleDelete(card.id)}>Delete</button>
-            </div>
-          </div>
-        ))}
+      <div className="admin-header">
+        <h1>Admin Dashboard</h1>
+        <div className="admin-nav">
+          <button 
+            className={`nav-button ${activeView === 'create' ? 'active' : ''}`}
+            onClick={() => setActiveView('create')}
+          >
+            Create Card
+          </button>
+          <button 
+            className={`nav-button ${activeView === 'manage' ? 'active' : ''}`}
+            onClick={() => setActiveView('manage')}
+          >
+            Manage Cards
+          </button>
+        </div>
       </div>
+
+      {activeView === 'create' ? (
+        <CardForm onCardCreated={fetchCards} />
+      ) : (
+        <div className="card-management">
+          <h2>Manage Cards</h2>
+          {error && <div className="error-message">{error}</div>}
+          
+          {loading ? (
+            <div className="loading">Loading cards...</div>
+          ) : (
+            <div className="cards-grid">
+              {cards.map(card => (
+                <div key={card._id} className="card-item">
+                  <img 
+                    src={card.imageUrl} 
+                    alt={card.cardName} 
+                    className="card-thumbnail"
+                  />
+                  <div className="card-details">
+                    <h3>{card.cardName}</h3>
+                    <p>Rarity: {card.rarity}</p>
+                    <div className="card-stats">
+                      <span>ATK: {card.attack}</span>
+                      <span>DEF: {card.defense}</span>
+                      <span>HP: {card.health}</span>
+                    </div>
+                  </div>
+                  <div className="card-actions">
+                    <button 
+                      onClick={() => handleDeleteCard(card._id)}
+                      className="delete-button"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

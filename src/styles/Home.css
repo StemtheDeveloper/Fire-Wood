@@ -1,8 +1,7 @@
 /* HomePage.css */
 .home-container {
     min-height: 100vh;
-    background: #1a1a1a;
-    color: #ffffff;
+    /* background: rgba(0, 0, 0, 0.8); */
    }
    
    /* Hero Section */
@@ -14,26 +13,20 @@
     align-items: center;
     text-align: center;
     padding: 2rem;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+
     position: relative;
-    z-index: 1;
+
    }
    
    .hero-section::after {
-    content: '';
+
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.3)
-    );
-    z-index: -1;
+
+
    }
    
    .hero-content h1 {
@@ -69,7 +62,7 @@
    
    .featured-card.center-card {
     transform: perspective(1000px) rotateY(0deg) scale(1.1);
-    z-index: 2;
+
    }
    
    .featured-card:hover {
@@ -171,26 +164,21 @@
    .cta-section {
     text-align: center;
     padding: 4rem 2rem;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(10px);
     position: relative;
-    z-index: 1;
+ 
    }
    
    .cta-section::after {
-    content: '';
+
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.3)
-    );
-    z-index: -1;
+
    }
    
    .cta-section h2 {

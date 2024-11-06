@@ -14,15 +14,19 @@ import Profile from './pages/Profile'; // Import the Profile component
 import Shop from './pages/Shop'; // Import the Shop component
 import Signup from './pages/Signup'; // Import the Signup component
 import Stats from './pages/Stats'; // Import the Stats component
+import BG from './assets/backgrounds/Designer (12).png';
 
 function App() {
   return (
     <Router>
+      <div className='appBackground'><img src={BG} className="backgroundImage" alt="A medieval battle scene" /></div>
+      
+      <div className="gradientOverlay"></div>
       <div className="App">
         <header className="App-header">
           <Nav />
         </header>
-        <div className="gradientOverlay"></div>
+        
         <Routes>
           <Route path="/" element={<Home />} /> {/* Add Home route */}
           <Route path="/admin" element={<Admin />} /> {/* Add Admin route */}
@@ -37,6 +41,7 @@ function App() {
         </Routes>
         <Footer />
       </div>
+      
     </Router>
   );
 }

@@ -1,0 +1,130 @@
+/* src/styles/CardForm.css */
+.card-form-container {
+    min-height: 100vh;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .card-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(42, 42, 42, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-form h2 {
+    font-family: "OldLondon", serif;
+    color: #ffd700;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-family: "OldLondon", serif;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #fff;
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .form-group input[type="file"] {
+    padding: 0.5rem;
+  }
+  
+  .file-name {
+    color: #ffd700;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 1rem;
+    background: #ffd700;
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    font-family: "OldLondon", serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+  }
+  
+  .submit-button:hover {
+    transform: translateY(-2px);
+    background: #ffe44d;
+  }
+  
+  .submit-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .error-message,
+  .success-message {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .error-message {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+  }
+  
+  .success-message {
+    background: rgba(87, 187, 138, 0.1);
+    border: 1px solid #57bb8a;
+    color: #57bb8a;
+  }
+  
+  .admin-error {
+    text-align: center;
+    padding: 2rem;
+    color: #ff6b6b;
+    font-size: 1.2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .card-form {
+      padding: 1rem;
+    }
+  
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }

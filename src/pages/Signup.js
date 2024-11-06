@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/Signup.css';
 
+
+
 const Signup = () => {
+  const API_URL = 'http://localhost:5000'; // or your server URL
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  
   const handleGoogleSignup = async () => {
     setLoading(true);
     setError('');
@@ -16,9 +20,17 @@ const Signup = () => {
     
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log("Signup successful", result.user);
-      // You can store additional user data in Firestore here if needed
-      navigate('/'); // Redirect to home page after successful signup
+  console.log("Signup successful", result.user);
+
+  // Create user in MongoDB with more details
+  await axios.post(`${API_URL}/api/users`, {
+    userId: result.user.uid,
+    email: result.user.email,
+    username: result.user.displayName,
+    profilePicture: result.user.photoURL
+  });
+      
+  navigate('/profile');
     } catch (error) {
       console.error("Signup error:", error);
       switch (error.code) {

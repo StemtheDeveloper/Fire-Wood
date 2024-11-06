@@ -4,7 +4,7 @@ const Shop = () => {
   return (
     <div className="shop-container">
       <h1>Shop Page</h1>
-      {/* Add your shop page content here */}
+      <p>Won't be implemented yet</p>
     </div>
   );
 };

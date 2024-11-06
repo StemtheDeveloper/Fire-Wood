@@ -23,19 +23,32 @@ p {
 
 .App {
   text-align: center;
-  background-image: url('./assets/backgrounds/Designer (12).png');
-  background-repeat: no-repeat;
-  background-size: cover;
+
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
+.appBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+}
+
+.appBackground img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .gradientOverlay {
   background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,1) 100%);
   position: fixed;
-  z-index: 1;
+  z-index: -1;
   top: 0;
   left: 0;
   width: 100vw;
@@ -46,7 +59,7 @@ p {
 .App-logo {
   height: 2em;
   pointer-events: none;
-  z-index: 2;
+  
 }
 
 .App-header {

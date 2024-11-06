@@ -4,7 +4,7 @@ const Stats = () => {
   return (
     <div className="play-container">
       <h1>Stats Page</h1>
-      {/* Add your Stats page content here */}
+      <p>Won't be implemented yet</p>
     </div>
   );
 };

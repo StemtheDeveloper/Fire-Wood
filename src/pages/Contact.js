@@ -4,7 +4,7 @@ const Contact = () => {
   return (
     <div className="contact-container">
       <h1>Contact Page</h1>
-      {/* Add your contact page content here */}
+      <p>Won't be implemented yet</p>
     </div>
   );
 };

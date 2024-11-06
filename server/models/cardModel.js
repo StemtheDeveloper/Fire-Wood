@@ -1,53 +1,102 @@
-const mongoose = require('mongoose');
+// server/models/cardModel.js
+import mongoose from 'mongoose';
 
 const specialAbilitySchema = new mongoose.Schema({
-    description: String,
-    type: {
-        type: [String],
-        enum: ['Damage', 'Heal', 'Shield', 'Convert', 'Poison', 'Draw']
-    },
-    trigger: {
-        type: [String],
-        enum: ['Attack', 'Move', 'Proximity', 'Turn start', 'Draw', 'Enemy played a card', 'You played a card']
-    },
-    proximityCondition: Number,
-    duration: String,
-    effectValue: String,
-    targetIds: [String]
+  description: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    required: true
+  },
+  trigger: {
+    type: String,
+    required: true
+  },
+  proximityCondition: {
+    type: Number,
+    default: 1
+  },
+  duration: {
+    type: String,
+    required: false
+  },
+  effectValue: {
+    type: String,
+    required: false
+  },
+  targetIds: [String]
 });
 
 const cardSchema = new mongoose.Schema({
-    cardId: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    ownerId: {
-        type: String,
-        required: true
-    },
-    cardName: {
-        type: String,
-        required: true
-    },
-    rarity: {
-        type: Number,
-        required: true,
-        min: 1
-    },
-    stats: {
-        defense: { type: Number, required: true },
-        attack: { type: Number, required: true },
-        speed: { type: Number, required: true },
-        energy: { type: Number, required: true },
-        health: { type: Number, required: true },
-        accuracy: { type: Number, required: true }
-    },
-    dateCreated: {
-        type: Date,
-        default: Date.now
-    },
-    specialAbility: specialAbilitySchema
+  cardName: {
+    type: String,
+    required: true
+  },
+  ownerId: {
+    type: String,
+    required: true
+  },
+  imageUrl: {
+    type: String,
+    required: true
+  },
+  rarity: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 10000
+  },
+  defense: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100
+  },
+  attack: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100
+  },
+  speed: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 10
+  },
+  energy: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 10
+  },
+  health: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 500  // Updated to match form max
+  },
+  accuracy: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now
+  },
+  specialAbility: specialAbilitySchema
 });
 
-module.exports = mongoose.model('Card', cardSchema);
+// Add proper error handling
+cardSchema.pre('save', function(next) {
+  if (!this.imageUrl) {
+    next(new Error('Image URL is required'));
+  }
+  next();
+});
+
+export default mongoose.model('Card', cardSchema);
