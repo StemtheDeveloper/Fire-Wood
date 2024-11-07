@@ -6,7 +6,7 @@ import InstagramIcon from '../assets/logos/Instagram Black.svg';
 import XIcon from '../assets/logos/X black.svg';
 import YoutubeIcon from '../assets/logos/Youtube Black.svg';
 import RedBoxSoftware from '../assets/logos/Red Box Software final.svg';
-import './Footer.css';
+import '../styles/Footer.css';
 
 const Footer = () => {
   return (

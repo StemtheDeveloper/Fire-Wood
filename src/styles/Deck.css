@@ -23,6 +23,7 @@
   overflow: hidden;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
 }
 
 .card:hover {
@@ -47,6 +48,13 @@
   height: 100%;
   object-fit: contain;
   border-radius: 8px;
+  
+  filter: brightness(0.5);
+}
+
+.card-image:hover {
+  transition: transform 0.5s ease;
+  filter: brightness(1);
 }
 
 .card-info {
@@ -125,6 +133,52 @@
     transform: scale(1);
     opacity: 1;
   }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.card-placeholder {
+  background: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.card-placeholder-image {
+  aspect-ratio: 1/2;  /* 570:1140 ratio */
+  width: 100%;
+  background: linear-gradient(to right, #333 8%, #3a3a3a 18%, #333 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
+
+.card-placeholder {
+  background: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-placeholder-image {
+  aspect-ratio: 63/88;
+  width: 100%;
+  background: linear-gradient(to right, #333 8%, #3a3a3a 18%, #333 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
 }
 
 .enlarged-image {

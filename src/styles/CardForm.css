@@ -41,11 +41,15 @@
     margin-bottom: 0.5rem;
     font-family: "OldLondon", serif;
   }
+
+input {
+  max-width: 70%;
+}
   
   .form-group input,
   .form-group select,
   .form-group textarea {
-    width: 100%;
+    width: 70%;
     padding: 0.75rem;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);

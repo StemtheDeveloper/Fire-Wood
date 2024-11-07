@@ -298,6 +298,38 @@ const CardForm = ({ onCardCreated }) => {
         </div>
 
         <div className="form-group">
+          <label htmlFor="specialAbility.proximityCondition">Proximity Condition</label>
+          <input
+            type="number"
+            id="specialAbility.proximityCondition"
+            name="specialAbility.proximityCondition"
+            value={cardData.specialAbility.proximityCondition}
+            onChange={handleInputChange}
+          />
+
+         
+
+          <label htmlFor="specialAbility.duration">Duration</label>
+          <input
+            type="text"
+            id="specialAbility.duration"
+            name="specialAbility.duration"
+            value={cardData.specialAbility.duration}
+            onChange={handleInputChange}
+          />
+
+          <label htmlFor="specialAbility.effectValue">Effect Value</label>
+          <input
+            type="text"
+            id="specialAbility.effectValue"
+            name="specialAbility.effectValue"
+            value={cardData.specialAbility.effectValue}
+            onChange={handleInputChange}
+          />
+        </div>
+
+
+        <div className="form-group">
           <label htmlFor="cardImage">Card Image</label>
           <input
             type="file"

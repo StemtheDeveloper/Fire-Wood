@@ -76,7 +76,7 @@
 
 .card-thumbnail {
   width: 100%;
-  height: 200px;
+  height: auto;
   object-fit: cover;
 }
 
@@ -98,13 +98,21 @@
 }
 
 .card-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  height: 4em;
   padding: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 0.5rem;
 }
 
 .delete-button {
   width: 100%;
-  padding: 0.5rem;
+  height: 50px;
+
   background: #ff6b6b;
   border: none;
   border-radius: 4px;
@@ -115,6 +123,130 @@
 
 .delete-button:hover {
   background: #ff5252;
+}
+
+.edit-button {
+  width: 100%;
+  height: 50px;
+  background: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background: #45a049;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+}
+
+.edit-modal {
+  position: sticky;
+  top: 0;
+
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.edit-form input,
+.edit-form select {
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  width: 90%;
+}
+
+.edit-form input[type="file"] {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+}
+
+.preview-image {
+  width: 50%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.save-button {
+  padding: 0.75rem;
+  background: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background: #45a049;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Scrollbar style */
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #333;
+  border-radius: 8px;
+  padding-right: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #FFD200;
+  border-radius: 8px;
+  
 }
 
 .admin-denied {
@@ -145,6 +277,30 @@
 
 .error-message {
   color: #ff6b6b;
+}
+
+.form-section {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.form-section h3 {
+  color: #ffd700;
+  margin-bottom: 1rem;
+  font-family: "OldLondon", serif;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+label {
+  color: #ffd700;
+  font-family: "OldLondon", serif;
 }
 
 @media (max-width: 768px) {

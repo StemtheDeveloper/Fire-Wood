@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Nav.css";
+import "../styles/Nav.css";
 import ButtonIMG from "../assets/other/Button.svg";
 import FancyHR from "../assets/other/Fancy HR white.svg";
 import logo from "../assets/logos/Fire Wood Logo.svg";

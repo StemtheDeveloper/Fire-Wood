@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Deck.css';
 
+const CardPlaceholder = () => (
+  <div className="card-wrapper">
+    <div className="card-placeholder">
+      <div className="card-placeholder-image" />
+    </div>
+  </div>
+);
+
 const Deck = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +42,18 @@ const Deck = () => {
     }
   };
 
-  if (loading) return <div className="deck-loading">Loading cards...</div>;
+  // if (loading) {
+  //   return (
+  //     <div className="deck-container">
+  //       <div className="placeholder-grid">
+  //         {[...Array(12)].map((_, index) => (
+  //           <CardPlaceholder key={index} />
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   if (error) return <div className="deck-error">{error}</div>;
 
   return (
