@@ -6,6 +6,7 @@ import axios from 'axios';
 import '../styles/Admin.css';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '../config/firebaseConfig.js';
+import QueryModal from '../components/QueryModal';
 
 const Admin = () => {
   const { user } = useAuth();
@@ -14,10 +15,16 @@ const Admin = () => {
   const [error, setError] = useState('');
   const [activeView, setActiveView] = useState('create'); // 'create' or 'manage'
   const [editingCard, setEditingCard] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [view, setView] = useState('cards'); // 'cards' or 'users'
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showQueryModal, setShowQueryModal] = useState(false);
+  const [queryResults, setQueryResults] = useState([]);
 
   useEffect(() => {
     if (user?.email === 'stiaan44@gmail.com') {
       fetchCards();
+      fetchUsers();
     }
   }, [user]);
 
@@ -30,6 +37,16 @@ const Admin = () => {
       setError('Failed to load cards');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/users');
+      setUsers(response.data);
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      setError('Failed to load users');
     }
   };
 
@@ -55,6 +72,28 @@ const Admin = () => {
       setError('Failed to update card');
     }
   };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleQuery = async (collection, key) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/query', { collection, key });
+      setQueryResults(response.data);
+    } catch (err) {
+      console.error('Error querying data:', err);
+      setError('Failed to query data');
+    }
+  };
+
+  const filteredCards = cards.filter(card =>
+    card.cardName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredUsers = users.filter(user =>
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const EditCardModal = ({ card, onClose, onSave }) => {
     const [formData, setFormData] = useState({
@@ -300,6 +339,11 @@ const Admin = () => {
     );
   };
 
+  const handleNavClick = (view) => {
+    setActiveView(view);
+    setView(view === 'users' ? 'users' : 'cards');
+  };
+
   // Only render if user is admin
   if (user?.email !== 'stiaan44@gmail.com') {
     return (
@@ -317,31 +361,58 @@ const Admin = () => {
         <div className="admin-nav">
           <button 
             className={`nav-button ${activeView === 'create' ? 'active' : ''}`}
-            onClick={() => setActiveView('create')}
+            onClick={() => handleNavClick('create')}
           >
             Create Card
           </button>
           <button 
             className={`nav-button ${activeView === 'manage' ? 'active' : ''}`}
-            onClick={() => setActiveView('manage')}
+            onClick={() => handleNavClick('manage')}
           >
             Manage Cards
+          </button>
+          <button 
+            className={`nav-button ${view === 'users' ? 'active' : ''}`}
+            onClick={() => handleNavClick('users')}
+          >
+            View Users
+          </button>
+          <button 
+            className="nav-button"
+            onClick={() => setShowQueryModal(true)}
+          >
+            Query
           </button>
         </div>
       </div>
 
+      {/* Query Modal */}
+      {showQueryModal && (
+        <QueryModal
+          onClose={() => setShowQueryModal(false)}
+          onQuery={handleQuery}
+          queryResults={queryResults}
+        />
+      )}
+
       {activeView === 'create' ? (
         <CardForm onCardCreated={fetchCards} />
-      ) : (
+      ) : view === 'cards' ? (
         <div className="card-management">
           <h2>Manage Cards</h2>
+          <input 
+            type="text" 
+            placeholder="Search Cards" 
+            value={searchTerm} 
+            onChange={handleSearchChange} 
+            className="search-bar"
+          />
           {error && <div className="error-message">{error}</div>}
-          
           {loading ? (
             <div className="loading">Loading cards...</div>
           ) : (
             <div className="cards-grid">
-              {cards.map(card => (
+              {filteredCards.map(card => (
                 <div key={card._id} className="card-item">
                   <img 
                     src={card.imageUrl} 
@@ -371,6 +442,31 @@ const Admin = () => {
                       Delete
                     </button>
                   </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="user-management">
+          <h2>Manage Users</h2>
+          <input 
+            type="text" 
+            placeholder="Search Users" 
+            value={searchTerm} 
+            onChange={handleSearchChange} 
+            className="search-bar"
+          />
+          {error && <div className="error-message">{error}</div>}
+          {loading ? (
+            <div className="loading">Loading users...</div>
+          ) : (
+            <div className="users-grid">
+              {filteredUsers.map(user => (
+                <div key={user._id} className="user-item">
+                  <p>{user.username}</p>
+                  <p>{user.email}</p>
+                  <p>{user.isAdmin ? 'Admin' : 'User'}</p>
                 </div>
               ))}
             </div>

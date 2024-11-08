@@ -32,7 +32,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     // Validate required fields
-    const requiredFields = ['cardName', 'imageUrl', 'ownerId'];
+    const requiredFields = [
+      'cardName', 'imageUrl', 'ownerId', 
+      'accuracy', 'health', 'energy', 
+      'speed', 'attack', 'defense', 'rarity'
+    ];
     for (const field of requiredFields) {
       if (!req.body[field]) {
         return res.status(400).json({ message: `${field} is required` });
