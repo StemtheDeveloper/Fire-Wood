@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import '../styles/Deck.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../styles/Deck.css";
 
 const CardPlaceholder = () => (
   <div className="card-wrapper">
@@ -13,7 +13,7 @@ const CardPlaceholder = () => (
 const Deck = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [selectedCard, setSelectedCard] = useState(null);
 
   useEffect(() => {
@@ -22,11 +22,11 @@ const Deck = () => {
 
   const fetchCards = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/cards');
+      const response = await axios.get("http://localhost:5050/api/cards");
       setCards(response.data);
     } catch (err) {
-      console.error('Error fetching cards:', err);
-      setError('Failed to load cards');
+      console.error("Error fetching cards:", err);
+      setError("Failed to load cards");
     } finally {
       setLoading(false);
     }
@@ -37,7 +37,7 @@ const Deck = () => {
   };
 
   const handleCloseEnlarged = (e) => {
-    if (e.target.classList.contains('enlarged-view')) {
+    if (e.target.classList.contains("enlarged-view")) {
       setSelectedCard(null);
     }
   };
@@ -59,15 +59,15 @@ const Deck = () => {
   return (
     <div className="deck-container">
       <div className="cards-grid">
-        {cards.map(card => (
-          <div 
-            key={card._id} 
+        {cards.map((card) => (
+          <div
+            key={card._id}
             className="card-wrapper"
             onClick={() => handleCardClick(card)}
           >
-            <img 
-              src={card.imageUrl} 
-              alt={card.cardName} 
+            <img
+              src={card.imageUrl}
+              alt={card.cardName}
               className="card-image"
               loading="lazy"
             />
@@ -78,9 +78,9 @@ const Deck = () => {
       {selectedCard && (
         <div className="enlarged-view" onClick={handleCloseEnlarged}>
           <div className="enlarged-card">
-            <img 
-              src={selectedCard.imageUrl} 
-              alt={selectedCard.cardName} 
+            <img
+              src={selectedCard.imageUrl}
+              alt={selectedCard.cardName}
               className="enlarged-image"
             />
             <div className="card-details">

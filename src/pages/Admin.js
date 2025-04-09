@@ -1,28 +1,33 @@
 // src/components/Admin.js
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import CardForm from '../components/CardForm';
-import axios from 'axios';
-import '../styles/Admin.css';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { storage } from '../config/firebaseConfig.js';
-import QueryModal from '../components/QueryModal';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
+import CardForm from "../components/CardForm";
+import axios from "axios";
+import "../styles/Admin.css";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
+import { storage } from "../config/firebaseConfig.js";
+import QueryModal from "../components/QueryModal";
 
 const Admin = () => {
   const { user } = useAuth();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [activeView, setActiveView] = useState('create'); // 'create' or 'manage'
+  const [error, setError] = useState("");
+  const [activeView, setActiveView] = useState("create"); // 'create' or 'manage'
   const [editingCard, setEditingCard] = useState(null);
   const [users, setUsers] = useState([]);
-  const [view, setView] = useState('cards'); // 'cards' or 'users'
-  const [searchTerm, setSearchTerm] = useState('');
+  const [view, setView] = useState("cards"); // 'cards' or 'users'
+  const [searchTerm, setSearchTerm] = useState("");
   const [showQueryModal, setShowQueryModal] = useState(false);
   const [queryResults, setQueryResults] = useState([]);
 
   useEffect(() => {
-    if (user?.email === 'stiaan44@gmail.com') {
+    if (user?.email === "stiaan44@gmail.com") {
       fetchCards();
       fetchUsers();
     }
@@ -30,11 +35,11 @@ const Admin = () => {
 
   const fetchCards = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/cards');
+      const response = await axios.get("http://localhost:5050/api/cards");
       setCards(response.data);
     } catch (err) {
-      console.error('Error fetching cards:', err);
-      setError('Failed to load cards');
+      console.error("Error fetching cards:", err);
+      setError("Failed to load cards");
     } finally {
       setLoading(false);
     }
@@ -42,34 +47,39 @@ const Admin = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users');
+      const response = await axios.get("http://localhost:5050/api/users");
       setUsers(response.data);
     } catch (err) {
-      console.error('Error fetching users:', err);
-      setError('Failed to load users');
+      console.error("Error fetching users:", err);
+      setError("Failed to load users");
     }
   };
 
   const handleDeleteCard = async (cardId) => {
-    if (window.confirm('Are you sure you want to delete this card?')) {
+    if (window.confirm("Are you sure you want to delete this card?")) {
       try {
         await axios.delete(`http://localhost:5000/api/cards/${cardId}`);
-        setCards(cards.filter(card => card._id !== cardId));
+        setCards(cards.filter((card) => card._id !== cardId));
       } catch (err) {
-        console.error('Error deleting card:', err);
-        setError('Failed to delete card');
+        console.error("Error deleting card:", err);
+        setError("Failed to delete card");
       }
     }
   };
 
   const handleEditCard = async (cardId, updatedData) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/cards/${cardId}`, updatedData);
-      setCards(cards.map(card => card._id === cardId ? response.data : card));
+      const response = await axios.put(
+        `http://localhost:5000/api/cards/${cardId}`,
+        updatedData
+      );
+      setCards(
+        cards.map((card) => (card._id === cardId ? response.data : card))
+      );
       setEditingCard(null);
     } catch (err) {
-      console.error('Error updating card:', err);
-      setError('Failed to update card');
+      console.error("Error updating card:", err);
+      setError("Failed to update card");
     }
   };
 
@@ -79,19 +89,22 @@ const Admin = () => {
 
   const handleQuery = async (collection, key) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/query', { collection, key });
+      const response = await axios.post("http://localhost:5000/api/query", {
+        collection,
+        key,
+      });
       setQueryResults(response.data);
     } catch (err) {
-      console.error('Error querying data:', err);
-      setError('Failed to query data');
+      console.error("Error querying data:", err);
+      setError("Failed to query data");
     }
   };
 
-  const filteredCards = cards.filter(card =>
+  const filteredCards = cards.filter((card) =>
     card.cardName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user) =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -99,19 +112,19 @@ const Admin = () => {
     const [formData, setFormData] = useState({
       ...card,
       specialAbility: {
-        ...card.specialAbility
-      }
+        ...card.specialAbility,
+      },
     });
     const [previewImage, setPreviewImage] = useState(card.imageUrl);
     const [imageFile, setImageFile] = useState(null);
     const [uploading, setUploading] = useState(false);
-  
+
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
         setUploading(true);
         let updatedData = { ...formData };
-  
+
         if (imageFile) {
           // Delete old image from Firebase
           if (card.imageUrl) {
@@ -119,46 +132,57 @@ const Admin = () => {
             try {
               await deleteObject(oldImageRef);
             } catch (error) {
-              console.error('Error deleting old image:', error);
+              console.error("Error deleting old image:", error);
             }
           }
-  
+
           // Upload new image to Firebase
-          const imageRef = ref(storage, `cards/${Date.now()}_${imageFile.name}`);
+          const imageRef = ref(
+            storage,
+            `cards/${Date.now()}_${imageFile.name}`
+          );
           await uploadBytes(imageRef, imageFile);
           const newImageUrl = await getDownloadURL(imageRef);
           updatedData.imageUrl = newImageUrl;
         }
-  
+
         onSave(card._id, updatedData);
       } catch (error) {
-        console.error('Error updating card:', error);
+        console.error("Error updating card:", error);
       } finally {
         setUploading(false);
       }
     };
-  
+
     const handleChange = (e) => {
       const { name, value } = e.target;
-      const numericFields = ['attack', 'defense', 'health', 'speed', 'energy', 'accuracy', 'rarity'];
-      
-      setFormData(prev => ({
+      const numericFields = [
+        "attack",
+        "defense",
+        "health",
+        "speed",
+        "energy",
+        "accuracy",
+        "rarity",
+      ];
+
+      setFormData((prev) => ({
         ...prev,
-        [name]: numericFields.includes(name) ? parseInt(value) : value
+        [name]: numericFields.includes(name) ? parseInt(value) : value,
       }));
     };
-  
+
     const handleSpecialAbilityChange = (e) => {
       const { name, value } = e.target;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         specialAbility: {
           ...prev.specialAbility,
-          [name]: value
-        }
+          [name]: value,
+        },
       }));
     };
-  
+
     const handleImageChange = (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -166,13 +190,15 @@ const Admin = () => {
         setPreviewImage(URL.createObjectURL(file));
       }
     };
-  
+
     return (
       <div className="modal-overlay">
         <div className="edit-modal">
           <div className="modal-header">
             <h2>Edit Card</h2>
-            <button className="close-button" onClick={onClose}>&times;</button>
+            <button className="close-button" onClick={onClose}>
+              &times;
+            </button>
           </div>
           <form onSubmit={handleSubmit} className="edit-form">
             {/* Image Section */}
@@ -180,7 +206,7 @@ const Admin = () => {
               <img src={previewImage} alt="Preview" className="preview-image" />
             )}
             <input type="file" accept="image/*" onChange={handleImageChange} />
-  
+
             {/* Basic Info Section */}
             <div className="form-section">
               <h3>Basic Information</h3>
@@ -192,15 +218,17 @@ const Admin = () => {
                 placeholder="Card Name"
                 required
               />
-              <label for="rarity"><h3>Rarity</h3></label>
-              <input name='rarity' type='number' value={formData.rarity}/>
+              <label for="rarity">
+                <h3>Rarity</h3>
+              </label>
+              <input name="rarity" type="number" value={formData.rarity} />
             </div>
-  
+
             {/* Stats Section */}
             <div className="form-section">
               <h3>Stats</h3>
               <div className="stats-grid">
-                <label for="attack" >Attack</label>
+                <label for="attack">Attack</label>
                 <input
                   type="number"
                   name="attack"
@@ -262,7 +290,7 @@ const Admin = () => {
                 />
               </div>
             </div>
-  
+
             {/* Special Ability Section */}
             <div className="form-section">
               <h3>Special Ability</h3>
@@ -276,7 +304,7 @@ const Admin = () => {
               />
 
               <h4>Type</h4>
-              <select 
+              <select
                 name="type"
                 value={formData.specialAbility.type}
                 onChange={handleSpecialAbilityChange}
@@ -291,7 +319,7 @@ const Admin = () => {
               </select>
 
               <h4>Trigger</h4>
-              <select 
+              <select
                 name="trigger"
                 value={formData.specialAbility.trigger}
                 onChange={handleSpecialAbilityChange}
@@ -327,11 +355,10 @@ const Admin = () => {
                 onChange={handleSpecialAbilityChange}
                 placeholder="Effect Value"
               />
-              
             </div>
-  
+
             <button type="submit" className="save-button" disabled={uploading}>
-              {uploading ? 'Saving...' : 'Save Changes'}
+              {uploading ? "Saving..." : "Save Changes"}
             </button>
           </form>
         </div>
@@ -341,11 +368,11 @@ const Admin = () => {
 
   const handleNavClick = (view) => {
     setActiveView(view);
-    setView(view === 'users' ? 'users' : 'cards');
+    setView(view === "users" ? "users" : "cards");
   };
 
   // Only render if user is admin
-  if (user?.email !== 'stiaan44@gmail.com') {
+  if (user?.email !== "stiaan44@gmail.com") {
     return (
       <div className="admin-denied">
         <h1>Access Denied</h1>
@@ -359,25 +386,25 @@ const Admin = () => {
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         <div className="admin-nav">
-          <button 
-            className={`nav-button ${activeView === 'create' ? 'active' : ''}`}
-            onClick={() => handleNavClick('create')}
+          <button
+            className={`nav-button ${activeView === "create" ? "active" : ""}`}
+            onClick={() => handleNavClick("create")}
           >
             Create Card
           </button>
-          <button 
-            className={`nav-button ${activeView === 'manage' ? 'active' : ''}`}
-            onClick={() => handleNavClick('manage')}
+          <button
+            className={`nav-button ${activeView === "manage" ? "active" : ""}`}
+            onClick={() => handleNavClick("manage")}
           >
             Manage Cards
           </button>
-          <button 
-            className={`nav-button ${view === 'users' ? 'active' : ''}`}
-            onClick={() => handleNavClick('users')}
+          <button
+            className={`nav-button ${view === "users" ? "active" : ""}`}
+            onClick={() => handleNavClick("users")}
           >
             View Users
           </button>
-          <button 
+          <button
             className="nav-button"
             onClick={() => setShowQueryModal(true)}
           >
@@ -395,16 +422,16 @@ const Admin = () => {
         />
       )}
 
-      {activeView === 'create' ? (
+      {activeView === "create" ? (
         <CardForm onCardCreated={fetchCards} />
-      ) : view === 'cards' ? (
+      ) : view === "cards" ? (
         <div className="card-management">
           <h2>Manage Cards</h2>
-          <input 
-            type="text" 
-            placeholder="Search Cards" 
-            value={searchTerm} 
-            onChange={handleSearchChange} 
+          <input
+            type="text"
+            placeholder="Search Cards"
+            value={searchTerm}
+            onChange={handleSearchChange}
             className="search-bar"
           />
           {error && <div className="error-message">{error}</div>}
@@ -412,11 +439,11 @@ const Admin = () => {
             <div className="loading">Loading cards...</div>
           ) : (
             <div className="cards-grid">
-              {filteredCards.map(card => (
+              {filteredCards.map((card) => (
                 <div key={card._id} className="card-item">
-                  <img 
-                    src={card.imageUrl} 
-                    alt={card.cardName} 
+                  <img
+                    src={card.imageUrl}
+                    alt={card.cardName}
                     className="card-thumbnail"
                   />
                   <div className="card-details">
@@ -429,13 +456,13 @@ const Admin = () => {
                     </div>
                   </div>
                   <div className="card-actions">
-                    <button 
+                    <button
                       onClick={() => setEditingCard(card)}
                       className="edit-button"
                     >
                       Edit
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDeleteCard(card._id)}
                       className="delete-button"
                     >
@@ -450,11 +477,11 @@ const Admin = () => {
       ) : (
         <div className="user-management">
           <h2>Manage Users</h2>
-          <input 
-            type="text" 
-            placeholder="Search Users" 
-            value={searchTerm} 
-            onChange={handleSearchChange} 
+          <input
+            type="text"
+            placeholder="Search Users"
+            value={searchTerm}
+            onChange={handleSearchChange}
             className="search-bar"
           />
           {error && <div className="error-message">{error}</div>}
@@ -462,11 +489,11 @@ const Admin = () => {
             <div className="loading">Loading users...</div>
           ) : (
             <div className="users-grid">
-              {filteredUsers.map(user => (
+              {filteredUsers.map((user) => (
                 <div key={user._id} className="user-item">
                   <p>{user.username}</p>
                   <p>{user.email}</p>
-                  <p>{user.isAdmin ? 'Admin' : 'User'}</p>
+                  <p>{user.isAdmin ? "Admin" : "User"}</p>
                 </div>
               ))}
             </div>
